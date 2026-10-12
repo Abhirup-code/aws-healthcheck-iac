@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+terraform/.terraform/
+terraform/build/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfplan
+*.zip
+.DS_Store
+Screenshot*.png
+commit_history.sh
