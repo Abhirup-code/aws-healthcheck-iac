@@ -6,7 +6,9 @@ A small monitoring stack written as Terraform. A scheduled AWS Lambda checks a l
 
 You can run and test all of it **without an AWS account**: unit tests, Terraform validate and plan, a security scan, and an optional local deploy with LocalStack.
 
-> **Honest scope.** This project has not been deployed to a real AWS account. It is checked with unit tests, `terraform validate`, `terraform plan` (fake credentials), Checkov, and optionally LocalStack. It was built with AI assistance, and I ran and reviewed the code.
+> **Honest scope.** This project has not been deployed to a real AWS account. It is checked with unit tests, `terraform validate`, `terraform plan` (fake credentials), Checkov, and optionally LocalStack.
+
+<img width="801" height="362" alt="Screenshot 2026-10-12 at 11 56 04 AM" src="https://github.com/user-attachments/assets/e6f8207a-212a-472d-92e1-d5a533ee7a5f" />
 
 ## How it works
 
