@@ -1,0 +1,21 @@
+# Checkov settings. Skips are deliberate for a small demo stack; reasons are in the README.
+directory:
+  - terraform
+framework:
+  - terraform
+quiet: true
+compact: true
+skip-check:
+  - CKV_AWS_26    # SNS uses no KMS: the AWS-managed key blocks CloudWatch alarm delivery
+  - CKV_AWS_158   # log group KMS encryption (extra key cost)
+  - CKV_AWS_338   # 14 day log retention chosen on purpose to limit storage cost
+  - CKV_AWS_116   # Lambda DLQ not needed: failures show up in the alarm
+  - CKV_AWS_117   # Lambda must reach the public internet, so no VPC
+  - CKV_AWS_115   # reserved concurrency not needed for one scheduled function
+  - CKV_AWS_272   # code signing out of scope
+  - CKV_AWS_173   # env var KMS encryption (extra key cost); no secrets stored in env vars
+  - CKV_AWS_50    # X-Ray tracing out of scope
+  - CKV_AWS_18    # S3 access logging would need a second bucket
+  - CKV2_AWS_62   # S3 event notifications not used
+  - CKV_AWS_144   # cross-region replication out of scope
+  - CKV_AWS_145   # SSE-S3 (AES256) used instead of a KMS key
