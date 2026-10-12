@@ -8,13 +8,24 @@ hcl2 = pytest.importorskip("hcl2")
 TF_DIR = Path(__file__).resolve().parent.parent / "terraform"
 
 
+def clean(value):
+    """Newer python-hcl2 versions keep quotes around names; older ones do not."""
+    if isinstance(value, str):
+        return value.strip('"')
+    if isinstance(value, list):
+        return [clean(v) for v in value]
+    if isinstance(value, dict):
+        return {clean(k): clean(v) for k, v in value.items()}
+    return value
+
+
 def load_all():
     merged = {}
     for f in sorted(TF_DIR.glob("*.tf")):
         with open(f) as fh:
             data = hcl2.load(fh)
         for key, val in data.items():
-            merged.setdefault(key, []).extend(val if isinstance(val, list) else [val])
+            merged.setdefault(key, []).extend(clean(val if isinstance(val, list) else [val]))
     return merged
 
 
@@ -50,14 +61,19 @@ def test_bucket_is_locked_down():
 
 
 def test_every_variable_has_a_description():
-    for block in load_all().get("variable", []):
+    variables = load_all().get("variable", [])
+    assert variables, "no variables found"
+    for block in variables:
         for name, body in block.items():
             assert body.get("description"), f"variable {name} has no description"
 
 
 def test_localstack_is_off_by_default():
+    found = False
     for block in load_all().get("variable", []):
         if "use_localstack" in block:
+            found = True
             default = block["use_localstack"]["default"]
             default = default[0] if isinstance(default, list) else default
-            assert default is False
+            assert default is False or str(default).lower() == "false"
+    assert found, "use_localstack variable not found"
